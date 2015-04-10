@@ -14,8 +14,8 @@
 	-->
 	
 	<typeAliases>
-		<typeAlias alias="Test" type="netty.framework.bean.Test" />
-		<typeAlias alias="TicketID" type="netty.framework.bean.TicketID" />
+		<typeAlias alias="Test" type="wang.gnim.netty.server.bean.Test" />
+		<typeAlias alias="TicketID" type="wang.gnim.netty.server.bean.TicketID" />
 	</typeAliases>
 
 	<mappers>

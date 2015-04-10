@@ -12,7 +12,7 @@
 	</receiver>
 
 	<!-- 
-	<appender name="CUSTOM" class="io.robertsing.nettyserver.server.core.log.server.SimpleFileApprender">
+	<appender name="CUSTOM" class="wang.gnim.netty.server.core.log.server.SimpleFileApprender">
 		<append>true</append>
 		<file>log/${stackTracePattern}</file>
 		<prudent></prudent>
@@ -22,7 +22,7 @@
 	</appender>
  	-->
 
-	<appender name="SIFT" class="io.robertsing.nettyserver.server.core.log.server.SimpleSiftingAppender">
+	<appender name="SIFT" class="wang.gnim.netty.server.core.log.server.SimpleSiftingAppender">
 		<discriminator>
 			<key>stackTracePattern</key>
 			<defaultValue>null</defaultValue>
