@@ -27,7 +27,7 @@ if errorlevel 1 (
 )
 
 java -cp tools\pb-helper\pbhelper.jar ^
-    com.cwa.sanguo.pb2json.Main ^
+    wang.gnim.protobuf.pb2json.Main ^
     protos generated\cpp generated\js
 
 dir
