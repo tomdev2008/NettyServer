@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd">
+    
+    <!-- 从jdbc.properties 加载配置 -->
+	<bean id="user.ds" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close" >
+	
+        <property name="driverClass" value="${user.jdbc.driverClass}" />
+		<property name="jdbcUrl" value="${user.jdbc.url}" />
+		<property name="user" value="${user.jdbc.user}" />
+		<property name="password" value="${user.jdbc.password}" />
+		<property name="minPoolSize" value="${user.minPoolSize}" />
+		<property name="initialPoolSize" value="${user.initialPoolSize}" />
+		<property name="maxPoolSize" value="${user.maxPoolSize}" />
+		<property name="acquireIncrement" value="${user.acquireIncrement}" />
+		<property name="maxStatementsPerConnection" value="${user.maxStatementsPerConnection}" />
+		<property name="maxStatements" value="${user.maxStatements}" />
+		<property name="testConnectionOnCheckin" value="${user.testConnectionOnCheckin}" />
+		<property name="automaticTestTable" value="${user.automaticTestTable}" />
+		<property name="idleConnectionTestPeriod" value="${user.idleConnectionTestPeriod}" />
+		<property name="testConnectionOnCheckout" value="${user.testConnectionOnCheckout}" />
+
+	</bean>
+	
+	<!-- C3P0数据源 监控 -->
+	<!--  
+	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+       <property name="jndiName" value="java:comp/env/jdbc/simpleDataSource" />
+   </bean>
+	-->
+	
+</beans>

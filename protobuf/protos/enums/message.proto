@@ -1,0 +1,17 @@
+package netty;
+
+import "msg_id.proto";
+
+option optimize_for = LITE_RUNTIME;
+option java_package = "wang.gnim.netty.messages";
+option java_outer_classname = "MessagerMessage";
+
+message MessagerRequest {
+    required MsgID  msgID    = 1; 
+    required bytes  content  = 2;
+}
+
+message MessagerResponse {
+    required MsgID      msgID     = 1;
+    required bytes 		content   = 2;
+}

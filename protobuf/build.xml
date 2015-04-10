@@ -1,0 +1,44 @@
+<project name="messages" default="jar" basedir=".">
+    <property name="src" location="generated/java"/>
+    <property name="build" location="generated/class"/>
+    <property name="jar.dest" location="generated/jar"/>
+	
+	<property name="generated" location="generated" />
+	
+    <path id="lib.path">
+        <fileset dir="tools/lib-java">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+  
+    <target name="init">
+        <mkdir dir="${build}/classes"/>
+    </target>
+
+    <target name="compile" depends="init" description="compile the source" >
+        <javac srcdir="${src}"
+               destdir="${build}/classes"
+               source="1.7"
+               target="1.7"
+               debug="on"
+               encoding ="utf-8">
+            <classpath refid="lib.path"/>
+        </javac>
+    </target>
+
+    <target name="jar" depends="compile" description="put classes into jar" >
+        <jar jarfile="${jar.dest}/${ant.project.name}.jar" basedir="${build}/classes" />
+		<!-- 
+    	<copy todir="${server}">
+    		<fileset dir="${generated}\jar" includes="*.jar" />
+    	</copy>
+    	<copy todir="${server}">
+    		<fileset dir="${generated}" includes="*.txt" />
+    	</copy>
+		-->
+    </target>
+
+    <target name="clean" description="clean up" >
+        <delete dir="${build}"/>
+    </target>
+</project>

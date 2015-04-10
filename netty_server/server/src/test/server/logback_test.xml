@@ -1,0 +1,33 @@
+<configuration>
+	
+	<contextName>netty_server</contextName>  
+	
+	<timestamp key="bySecond" datePattern="yyyy'-'MM'-'dd" /> 
+	
+	<property name="host" value="localhost" />
+	<property name="port_send" value="514" />
+	<property name="port_revice" value="8090" />
+
+	<appender name="SocketAppenderN" class="ch.qos.logback.classic.net.SocketAppender">
+		<remoteHost>${host}</remoteHost>
+		<port>${port_send}</port>
+		<reconnectionDelay>10000</reconnectionDelay>
+	</appender>
+	<receiver class="ch.qos.logback.classic.net.server.ServerSocketReceiver">
+    	<port>${port_revice}</port>
+  	</receiver>
+	
+  	<appender name="FileAppenderN" class="ch.qos.logback.core.FileAppender">
+		<append>true</append>
+		<file>log/log-${bySecond}.txt</file>
+		<prudent></prudent>
+		<encoder>   
+      		<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>   
+    	</encoder> 
+	</appender>
+
+	<root level="DEBUG">
+		<appender-ref ref="SocketAppenderN" />
+	</root>
+
+</configuration>
