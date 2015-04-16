@@ -5,6 +5,7 @@ import org.junit.Test;
 import wang.gnim.netty.net.redis.RedisSubPub;
 
 public class TestRedisSubPub {
+	
 	@Test
 	public void publish() {
 		RedisSubPub.INSTANCE.publish(null, null);
@@ -23,5 +24,10 @@ public class TestRedisSubPub {
 	@Test
 	public void psubscribe() {
 		RedisSubPub.INSTANCE.psubscribe(null, null);
+	}
+	
+	@Test
+	public void pubsubChannels() {
+		RedisSubPub.INSTANCE.pubsubChannels(null);
 	}
 }

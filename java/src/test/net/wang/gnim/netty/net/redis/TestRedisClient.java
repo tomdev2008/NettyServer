@@ -16,11 +16,6 @@ public class TestRedisClient {
 	}
 
 	@Test
-	public void pubsubChannels() {
-		RedisClient.INSTANCE.pubsubChannels(null);
-	}
-
-	@Test
 	public void randomBinaryKey() {
 		RedisClient.INSTANCE.randomBinaryKey();
 	}

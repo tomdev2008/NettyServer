@@ -58,12 +58,6 @@ public enum RedisClient {
 		}
 	}
 
-	public void pubsubChannels(String name) {
-		try (Jedis jedis = pool.getResource()) {
-			jedis.pubsubChannels(name);
-		}
-	}
-
 	public void expireAt(String key, long value) {
 		try (Jedis jedis = pool.getResource()) {
 			jedis.expireAt(key, value);
