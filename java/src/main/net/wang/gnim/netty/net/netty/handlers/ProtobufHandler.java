@@ -6,6 +6,7 @@ import java.net.SocketAddress;
 import org.apache.log4j.Logger;
 
 import wang.gnim.netty.net.netty.parser.ProtobufParse;
+import wang.gnim.netty.net.netty.pureSocket.ProtobufClient;
 import wang.gnim.netty.net.netty.pureSocket.SocketSession;
 import wang.gnim.netty.net.netty.pureSocket.SocketSessionCache;
 import io.netty.channel.ChannelHandlerContext;
@@ -51,6 +52,14 @@ public class ProtobufHandler extends ChannelInboundHandlerAdapter {
 			throws Exception {
 		logger.debug("Server : userEventTriggered");
 
+	}
+
+	@Override
+	public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+		logger.error("netty channelUnregistered : " + ctx.channel());
+		
+		ProtobufClient.INSTANCE.shutdon();
+		ProtobufClient.INSTANCE.tryConnect();
 	}
 
 	@Override

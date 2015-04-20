@@ -1,7 +1,5 @@
 package wang.gnim.netty.net.netty.pureSocket;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
 
@@ -18,6 +16,7 @@ import io.netty.handler.codec.protobuf.ProtobufDecoder;
 import io.netty.handler.codec.protobuf.ProtobufEncoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
+import io.netty.handler.codec.string.StringEncoder;
 import io.robertsing.nettyserver.messages.MessagerMessage.MessagerRequest;
 
 /**
@@ -31,69 +30,64 @@ public enum ProtobufClient {
 
 	INSTANCE;
 
-	private final ExecutorService executor = Executors.newCachedThreadPool();
-
 	private static final Logger logger = Logger.getLogger(ProtobufClient.class);
+	private EventLoopGroup group;
+	private Object lock = new Object();
+	
+	public void tryConnect() {
+		if(group == null) {
+			synchronized (lock) {
+				if(group == null) {
+					if(connect("", 1)) {
+						return;
+					}
+					if(connect("", 1)) {
+						return;
+					}
+					
+				}
+			}
+		}
+	}
+	
+	public boolean connect(String host, int port) {
 
-	public void connect(String host, int port) {
+		// 配置客户端NIO线程组
+		try {
+			group = new NioEventLoopGroup();
+			Bootstrap b = new Bootstrap();
+			b.group(group).channel(NioSocketChannel.class)
+					.option(ChannelOption.TCP_NODELAY, true)	
+					.option(ChannelOption.SO_KEEPALIVE, true)	// 设置长连接
+					.option(ChannelOption.SO_TIMEOUT, 50000)	// 设置超时
+					.handler(new ChannelInitializer<SocketChannel>() {
+						@Override
+						public void initChannel(SocketChannel ch)
+								throws Exception {
+//							ch.pipeline().addLast(new LengthFieldPrepender(4));
+							ch.pipeline().addLast(new StringEncoder());
+							ch.pipeline().addLast(new ProtobufHandler());
+						}
+					});
 
-		// 等待与远端创建完连接之后,才完成阻塞,进行消息通信
+			ChannelFuture f = b.connect(host, port).sync();
+			if(f.isSuccess())
+				return true;
+			else 
+				return false;
+			
+		} catch (final Exception e) {
+			logger.error("connect failure " + host + ":" + port + "   " + e.getMessage());
+			System.err.println("connect failure " + host + ":" + port + "   " + e.getMessage());
+			
+		} 
 		
-		// XXX NettyRunnable 在新的线程中启动，有问题,目前只要连接完毕,就会断开连接
-		executor.execute(new NettyRunnable(host, port));
-		
-		logger.debug("connect over!");
+		return false;
 	}
 
-	private static class NettyRunnable implements Runnable {
-
-		private final int port;
-		private final String host;
-
-		protected NettyRunnable(String host, int port) {
-			this.host = host;
-			this.port = port;
-		}
-
-		@Override
-		public void run() {
-			// 配置客户端NIO线程组
-			EventLoopGroup group = new NioEventLoopGroup();
-			try {
-				Bootstrap b = new Bootstrap();
-				b.group(group)
-				.channel(NioSocketChannel.class)
-				.option(ChannelOption.TCP_NODELAY, true)
-				.handler(new ChannelInitializer<SocketChannel>() {
-					@Override
-					public void initChannel(SocketChannel ch) throws Exception {
-						ch.pipeline().addLast(new ProtobufVarint32FrameDecoder());
-						ch.pipeline().addLast(new ProtobufVarint32LengthFieldPrepender());
-						MessagerRequest req = MessagerRequest.getDefaultInstance();
-						ch.pipeline().addLast(new ProtobufDecoder(req)); // ProtobufDecoder解码器
-						ch.pipeline().addLast(new ProtobufEncoder()); // ProtobufDecoder编码器
-						ch.pipeline().addLast(new ProtobufHandler());
-					}
-				});
-
-				// 发起异步连接操作
-				logger.debug("start connect " + host + ":" + port);
-				ChannelFuture f = b.connect(host, port).sync();
-				
-				// 阻塞, 等待客户端链路关闭
-				f.channel().closeFuture().sync();
-
-			} catch(final Exception e) {
-				e.printStackTrace();
-				
-			} finally {
-				// 释放NIO线程组
-				logger.info("client shutdownGracefully");
-				group.shutdownGracefully();
-			}
-
-		}
-
+	public void shutdon() {
+		group.shutdownGracefully();
+		group = null;
 	}
 	
 }
