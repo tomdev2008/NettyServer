@@ -60,13 +60,6 @@ public enum ProtobufServerFactory {
 			EventLoopGroup workerGroup = new NioEventLoopGroup(cpuSize);// subReactor负责多路分离已连接的socket,读写网 络数据,对业务处理功能,其扔给worker线程池完成
 
 			try {
-				/*
-				 * option() 	set {@ServerBootstrap#options		(Map<ChannelOption<?>, Object>))
-				 * handler() 	set {@AbstractBootstrap#handler		(ChannelHandler))
-				 * childHandler set {@ServerBootstrap#childHandler	(ChannelHandler))
-				 * 
-				 * build模式 是在对ServerBootstrap 成员属性进行值的设置,
-				 */
 				ServerBootstrap b = new ServerBootstrap();
 				b.group(bossGroup, workerGroup)
 						.channel(NioServerSocketChannel.class)	// 设置nio类型的channel,根据channel.class来实例化ChannelFactory对象
@@ -84,10 +77,8 @@ public enum ProtobufServerFactory {
 								addProtobuf(pipeline);
 								addTimeout(pipeline);
 								
-								pipeline.addLast(new ProtobufHandler());
-								
 								// 转发消息时  采用Netty 自带的线程池
-//								pipeline.addLast(new NioEventLoopGroup(128), new SocketHandler());
+								pipeline.addLast(new NioEventLoopGroup(128), new ProtobufHandler());
 							}
 						});
 
@@ -95,12 +86,6 @@ public enum ProtobufServerFactory {
 				ChannelFuture f = null;
 				try {
 					// 配置完成,开始绑定server,通过调用sync同步方法阻塞直到绑定成功
-					/*
-					 * bind() -> AbstractBootstrap#doBind(SocketAddress) -> AbstractBootstrap#initAndRegister() 
-					 * -> AbstractBootstrap#init() -> ServerBootstrap#init()
-					 * 
-					 * 最终调用的是ServerBootstrap#init(), 
-					 */
 					f = b.bind(serverPort).sync();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
@@ -109,39 +94,6 @@ public enum ProtobufServerFactory {
 				logger.info("server started at " + serverPort + " and wait channel close!!");
 				// 等待服务端监听端口关闭 应用程序会一直等待,直到channel关闭
 				try {
-					/*
-					 * 从bind方法入手, 顺藤摸瓜到doBind(final SocketAddress localAddress), 然后发现有这个实例化操作
-					 * final PendingRegistrationPromise promise = new PendingRegistrationPromise(channel);
-					 * 其实closeFuture() 就是  PendingRegistrationPromise
-					 * 
-					 * PendingRegistrationPromise -> DefaultChannelPromise -> DefaultPromise
-					 * 然后在DefaultPromise 找到 await()
-					 * 
-					 * @Override
-					    public Promise<V> await() throws InterruptedException {
-					        if (isDone()) {
-					            return this;
-					        }
-
-					        if (Thread.interrupted()) {
-					            throw new InterruptedException(toString());
-					        }
-
-					        synchronized (this) {
-					            while (!isDone()) {
-					                checkDeadLock();
-					                incWaiters();
-					                try {
-					                    wait();
-					                } finally {
-					                    decWaiters();
-					                }
-					            }
-					        }
-					        return this;
-					    }
-					 */
-					
 					f.channel().closeFuture().sync();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
