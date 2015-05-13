@@ -3,18 +3,11 @@ package wang.gnim.netty.net.redis;
 import java.util.List;
 
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 
 public enum RedisString {
 
 	INSTANCE;
 	
-	private JedisPool pool;
-
-	RedisString() {
-		pool = new JedisPool("10.234.10.12", 7006);
-	}
-
 	/**
 	 * 返回 key 所关联的字符串值.
 	 * 
@@ -27,7 +20,7 @@ public enum RedisString {
 	 * @return 当 key 不存在时,返回 nil ,否则,返回 key 的值. 如果 key 不是字符串类型,那么返回一个错误.
 	 */
 	public String get(String key) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.get(key);
 		}
 	}
@@ -56,7 +49,7 @@ public enum RedisString {
 	 *         ,但因为条件没达到而造成设置操作未执行,那么命令返回空批量回复（NULL Bulk Reply）.
 	 */
 	public String set(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.set(key, value);
 		}
 	}
@@ -72,7 +65,7 @@ public enum RedisString {
 	 * @return 追加 value 之后, key 中字符串的长度.
 	 */
 	public Long append(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.append(key, value);
 		}
 	}
@@ -93,7 +86,7 @@ public enum RedisString {
 	 * @return 被设置为 1 的位的数量.
 	 */
 	public Long bitcount(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.bitcount(key);
 		}
 	}
@@ -124,7 +117,7 @@ public enum RedisString {
 	 * @return 保存到 destkey 的字符串的长度,和输入 key 中最长的字符串长度相等.
 	 */
 	public Long bitop(String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.bitop(null, value, null);
 		}
 	}
@@ -146,7 +139,7 @@ public enum RedisString {
 	 * @return 执行 DECR 命令之后 key 的值.
 	 */
 	public Long decr(String key) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.decr(key);
 		}
 	}
@@ -168,7 +161,7 @@ public enum RedisString {
 	 * @return 减去 decrement 之后, key 的值.
 	 */
 	public Long decrBy(String key, long value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.decrBy(key, value);
 		}
 	}
@@ -180,7 +173,7 @@ public enum RedisString {
 	 * @return
 	 */
 	public byte[] get(byte[] key) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.get(key);
 		}
 	}
@@ -196,7 +189,7 @@ public enum RedisString {
 	 * @return 字符串值指定偏移量上的位(bit).
 	 */
 	public Boolean getbit(String key, long value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.getbit(key, value);
 		}
 	}
@@ -214,7 +207,7 @@ public enum RedisString {
 	 * @return 截取得出的子字符串.
 	 */
 	public String getrange(String name, long ordinal) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.getrange(name, ordinal, ordinal);
 		}
 	}
@@ -230,7 +223,7 @@ public enum RedisString {
 	 * @return 返回给定 key 的旧值. 当 key 没有旧值时,也即是, key 不存在时,返回 nil .
 	 */
 	public String getSet(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.getSet(key, value);
 		}
 	}
@@ -252,7 +245,7 @@ public enum RedisString {
 	 * @return 加上 increment 之后, key 的值.
 	 */
 	public Long incrBy(String key, long value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.incrBy(key, value);
 		}
 	}
@@ -282,7 +275,7 @@ public enum RedisString {
 	 * @return 执行命令之后 key 的值.
 	 */
 	public Double incrByFloat(String key, double value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.incrByFloat(key, value);
 		}
 	}
@@ -305,7 +298,7 @@ public enum RedisString {
 	 * @return 执行 INCR 命令之后 key 的值.
 	 */
 	public Long incr(String key) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.incr(key);
 		}
 	}
@@ -321,7 +314,7 @@ public enum RedisString {
 	 * @return 一个包含所有给定 key 的值的列表.
 	 */
 	public List<String> mget(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.mget(key, value);
 		}
 	}
@@ -340,7 +333,7 @@ public enum RedisString {
 	 * @return 
 	 */
 	public String mset(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.mset(key, value);
 		}
 	}
@@ -353,7 +346,7 @@ public enum RedisString {
 	 * @return
 	 */
 	public Long msetnx(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.msetnx(key, value);
 		}
 	}
@@ -372,7 +365,7 @@ public enum RedisString {
 	 * @return 当所有 key 都成功设置,返回 1 . 如果所有给定 key 都设置失败(至少有一个 key 已经存在),那么返回 0 .
 	 */
 	public String psetex(String key, String value, int ordinal) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.psetex(key, ordinal, value);
 		}
 	}
@@ -404,7 +397,7 @@ public enum RedisString {
 	 *         ,但因为条件没达到而造成设置操作未执行,那么命令返回空批量回复（NULL Bulk Reply）.
 	 */
 	public String set(byte[] key, byte[] value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.set(key, value);
 		}
 	}
@@ -429,7 +422,7 @@ public enum RedisString {
 	 * @return 指定偏移量原来储存的位.
 	 */
 	public Boolean setbit(String key, String value, long ordinal) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.setbit(key, ordinal, value);
 		}
 	}
@@ -450,7 +443,7 @@ public enum RedisString {
 	 * @return 设置成功时返回 OK . 当 seconds 参数不合法时,返回一个错误.
 	 */
 	public String setex(String key, int ordinal, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.setex(key, ordinal, value);
 		}
 	}
@@ -468,7 +461,7 @@ public enum RedisString {
 	 * @return 设置成功,返回 1 .
 	 */
 	public Long setnx(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.setnx(key, value);
 		}
 	}
@@ -495,7 +488,7 @@ public enum RedisString {
 	 * @return 被 SETRANGE 修改之后,字符串的长度.
 	 */
 	public Long setrange(String key, String value, long ordinal) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.setrange(key, ordinal, value);
 		}
 	}
@@ -511,7 +504,7 @@ public enum RedisString {
 	 * @return 字符串值的长度. 当 key 不存在时,返回 0 .
 	 */
 	public Long strlen(String key) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.strlen(key);
 		}
 	}

@@ -4,17 +4,10 @@ import java.util.List;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisCluster;
-import redis.clients.jedis.JedisPool;
 
 public enum RedisCluster {
 
 	INSTANCE;
-	
-	private JedisPool pool;
-
-	RedisCluster() {
-		pool = new JedisPool("10.234.10.12", 7006);
-	}
 	
 	/**
 	 * 
@@ -23,7 +16,7 @@ public enum RedisCluster {
 	 * @return
 	 */
 	public String clusterSetSlotMigrating(int ordinal, String name) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.clusterSetSlotMigrating(ordinal, name);
 		}
 	}
@@ -35,7 +28,7 @@ public enum RedisCluster {
 	 * @return
 	 */
 	public String clusterSetSlotImporting(int ordinal, String name) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.clusterSetSlotImporting(ordinal, name);
 		}
 	}
@@ -46,7 +39,7 @@ public enum RedisCluster {
 	 * @return
 	 */
 	public String clusterSetSlotStable(int ordinal) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.clusterSetSlotStable(ordinal);
 		}
 	}
@@ -56,7 +49,7 @@ public enum RedisCluster {
 	 * @return
 	 */
 	public String clusterFlushSlots() {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.clusterFlushSlots();
 		}
 	}
@@ -67,7 +60,7 @@ public enum RedisCluster {
 	 * @return
 	 */
 	public Long clusterKeySlot(String name) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.clusterKeySlot(name);
 		}
 	}
@@ -78,7 +71,7 @@ public enum RedisCluster {
 	 * @return
 	 */
 	public Long clusterCountKeysInSlot(int ordinal) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.clusterCountKeysInSlot(ordinal);
 		}
 	}
@@ -88,7 +81,7 @@ public enum RedisCluster {
 	 * @return
 	 */
 	public String clusterSaveConfig() {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.clusterSaveConfig();
 		}
 	}
@@ -99,7 +92,7 @@ public enum RedisCluster {
 	 * @return
 	 */
 	public String clusterReplicate(String name) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.clusterReplicate(name);
 		}
 	}
@@ -109,7 +102,7 @@ public enum RedisCluster {
 	 * @return
 	 */
 	public String clusterFailover() {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.clusterFailover();
 		}
 	}
@@ -119,7 +112,7 @@ public enum RedisCluster {
 	 * @return
 	 */
 	public String clusterNodes() {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.clusterNodes();
 		}
 	}
@@ -131,7 +124,7 @@ public enum RedisCluster {
 	 * @return
 	 */
 	public String clusterMeet(int ordinal, String name) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.clusterMeet(name, ordinal);
 		}
 	}
@@ -142,7 +135,7 @@ public enum RedisCluster {
 	 * @return
 	 */
 	public String clusterReset(JedisCluster.Reset reset) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.clusterReset(reset);
 		}
 	}
@@ -152,7 +145,7 @@ public enum RedisCluster {
 	 * @return
 	 */
 	public String clusterInfo() {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.clusterInfo();
 		}
 	}
@@ -163,7 +156,7 @@ public enum RedisCluster {
 	 * @return
 	 */
 	public String clusterForget(String name) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.clusterForget(name);
 		}
 	}
@@ -174,7 +167,7 @@ public enum RedisCluster {
 	 * @return
 	 */
 	public List<String> clusterSlaves(String name) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.clusterSlaves(name);
 		}
 	}
@@ -183,7 +176,7 @@ public enum RedisCluster {
 	 * 
 	 */
 	public void clusterSlots() {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			jedis.clusterSlots();
 		}
 	}
@@ -195,7 +188,7 @@ public enum RedisCluster {
 	 * @return
 	 */
 	public String clusterAddSlots(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.clusterAddSlots();
 		}
 	}
@@ -205,7 +198,7 @@ public enum RedisCluster {
 	 * @return
 	 */
 	public String clusterDelSlots() {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.clusterDelSlots();
 		}
 	}
@@ -216,7 +209,7 @@ public enum RedisCluster {
 	 * @return
 	 */
 	public List<String> clusterGetKeysInSlot(int ordinal) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.clusterGetKeysInSlot(ordinal, ordinal);
 		}
 	}
@@ -228,7 +221,7 @@ public enum RedisCluster {
 	 * @return
 	 */
 	public String clusterSetSlotNode(int ordinal, String name) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.clusterSetSlotNode(ordinal, name);
 		}
 	}

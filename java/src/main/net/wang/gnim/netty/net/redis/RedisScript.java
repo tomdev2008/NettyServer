@@ -3,7 +3,6 @@ package wang.gnim.netty.net.redis;
 import java.util.List;
 
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 
 /**
  * 从 Redis 2.6.0 版本开始,通过内置的 Lua 解释器,可以使用 EVAL 命令对 Lua 脚本进行求值.
@@ -289,12 +288,6 @@ public enum RedisScript {
 
 	INSTANCE;
 	
-	private JedisPool pool;
-
-	RedisScript() {
-		pool = new JedisPool("10.234.10.12", 7006);
-	}
-
 	/**
 	 * 
 	 * @param key
@@ -302,7 +295,7 @@ public enum RedisScript {
 	 * @return
 	 */
 	public Object eval(String key) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.eval(key);
 		}
 	}
@@ -319,7 +312,7 @@ public enum RedisScript {
 	 * @return
 	 */
 	public Object evalsha(String key) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.evalsha(key);
 		}
 	}
@@ -335,7 +328,7 @@ public enum RedisScript {
 	 *         校验和保持对应关系,比如列表的第三个元素的值就表示第三个 SHA1 校验和所指定的脚本在缓存中的状态.
 	 */
 	public List<Boolean> scriptExists(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.scriptExists(key, value);
 		}
 	}
@@ -358,7 +351,7 @@ public enum RedisScript {
 	 * @return 给定 script 的 SHA1 校验和
 	 */
 	public String scriptLoad(String key) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.scriptLoad(key);
 		}
 	}
@@ -371,7 +364,7 @@ public enum RedisScript {
 	 * @return 总是返回 OK
 	 */
 	public String scriptFlush() {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.scriptFlush();
 		}
 	}
@@ -392,7 +385,7 @@ public enum RedisScript {
 	 * @return 执行成功返回 OK ,否则返回一个错误.
 	 */
 	public String scriptKill() {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.scriptKill();
 		}
 	}

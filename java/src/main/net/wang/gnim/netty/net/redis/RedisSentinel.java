@@ -4,24 +4,17 @@ import java.util.List;
 import java.util.Map;
 
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 
 public enum RedisSentinel {
 
 	INSTANCE;
-	
-	private JedisPool pool;
-
-	RedisSentinel() {
-		pool = new JedisPool("10.234.10.12", 7006);
-	}
 	
 	/**
 	 * 
 	 * @return 
 	 */
 	public List<Map<String, String>> sentinelMasters() {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.sentinelMasters();
 		}
 	}
@@ -32,7 +25,7 @@ public enum RedisSentinel {
 	 * @return
 	 */
 	public List<String> sentinelGetMasterAddrByName(String name) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.sentinelGetMasterAddrByName(name);
 		}
 	}
@@ -43,7 +36,7 @@ public enum RedisSentinel {
 	 * @return
 	 */
 	public List<Map<String, String>> sentinelSlaves(String name) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.sentinelSlaves(name);
 		}
 	}
@@ -54,7 +47,7 @@ public enum RedisSentinel {
 	 * @return
 	 */
 	public String sentinelFailover(String name) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.sentinelFailover(name);
 		}
 	}
@@ -65,7 +58,7 @@ public enum RedisSentinel {
 	 * @return
 	 */
 	public String sentinelMonitor(String name, int ordinal) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.sentinelMonitor(name, name, ordinal, ordinal);
 		}
 	}
@@ -76,7 +69,7 @@ public enum RedisSentinel {
 	 * @return
 	 */
 	public String sentinelRemove(String name) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.sentinelRemove(name);
 		}
 	}

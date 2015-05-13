@@ -1,18 +1,11 @@
 package wang.gnim.netty.net.redis;
 
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 
 public enum RedisConnection {
 
 	INSTANCE;
 	
-	private JedisPool pool;
-
-	RedisConnection() {
-		pool = new JedisPool("10.234.10.12", 7006);
-	}
-
 	/**
 	 * 通过设置配置文件中 requirepass 项的值(使用命令 CONFIG SET requirepass password
 	 * ),可以使用密码来保护 Redis 服务器.
@@ -29,7 +22,7 @@ public enum RedisConnection {
 	 * @return 密码匹配时返回 OK ,否则返回一个错误.
 	 */
 	public String auth(String name) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.auth(name);
 		}
 	}
@@ -41,7 +34,7 @@ public enum RedisConnection {
 	 * @return message 自身.
 	 */
 	public String echo(String key) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.echo(key);
 		}
 	}
@@ -54,7 +47,7 @@ public enum RedisConnection {
 	 * @return 如果连接正常就返回一个 PONG ,否则返回一个连接错误.
 	 */
 	public String ping() {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.ping();
 		}
 	}
@@ -67,7 +60,7 @@ public enum RedisConnection {
 	 * @return 总是返回 OK (但是不会被打印显示,因为当时 Redis-cli 已经退出).
 	 */
 	public String quit() {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.quit();
 		}
 	}
@@ -81,7 +74,7 @@ public enum RedisConnection {
 	 * @return OK
 	 */
 	public String select(int ordinal) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.select(ordinal);
 		}
 	}

@@ -3,18 +3,11 @@ package wang.gnim.netty.net.redis;
 import java.util.Map;
 
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 
 public enum RedisHash {
 
 	INSTANCE;
 	
-	private JedisPool pool;
-
-	RedisHash() {
-		pool = new JedisPool("10.234.10.12", 7006);
-	}
-
 	/**
 	 * 将哈希表 key 中的域 field 的值设为 value .
 	 * 
@@ -30,7 +23,7 @@ public enum RedisHash {
 	 *         已经存在且旧值已被新值覆盖,返回 0
 	 */
 	public void hset(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			jedis.hset(key, value, value);
 		}
 	}
@@ -43,7 +36,7 @@ public enum RedisHash {
 	 * @return 给定域的值. 当给定域不存在或是给定 key 不存在时,返回
 	 */
 	public void hget(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			jedis.hget(key, value);
 		}
 	}
@@ -62,7 +55,7 @@ public enum RedisHash {
 	 * @return 设置成功,返回 1 . 如果给定域已经存在且没有操作被执行,返回 0 .
 	 */
 	public void hsetnx(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			jedis.hsetnx(key, value, value);
 		}
 	}
@@ -81,7 +74,7 @@ public enum RedisHash {
 	 * @return 如果命令执行成功,返回 OK . 当 key 不是哈希表(hash)类型时,返回一个错误.
 	 */
 	public void hmset(String key, Map<String, String> value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			jedis.hmset(key, value);
 		}
 	}
@@ -102,7 +95,7 @@ public enum RedisHash {
 	 * @return 一个包含多个给定域的关联值的表,表值的排列顺序和给定域参数的请求顺序一样.
 	 */
 	public void hmget(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			jedis.hmget(key, value);
 		}
 	}
@@ -121,7 +114,7 @@ public enum RedisHash {
 	 * @return 一个包含多个给定域的关联值的表,表值的排列顺序和给定域参数的请求顺序一样.
 	 */
 	public void hincrBy(String key, String value, long ordinal) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			jedis.hincrBy(key, value, ordinal);
 		}
 	}
@@ -147,7 +140,7 @@ public enum RedisHash {
 	 * @return 执行加法操作之后 field 域的值.
 	 */
 	public void hincrByFloat(String key, String value, double ordinal) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			jedis.hincrByFloat(key, value, ordinal);
 		}
 	}
@@ -164,7 +157,7 @@ public enum RedisHash {
 	 * @return 如果哈希表含有给定域,返回 1 . 如果哈希表不含有给定域,或 key 不存在,返回 0 .
 	 */
 	public void hexists(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			jedis.hexists(key, value);
 		}
 	}
@@ -177,7 +170,7 @@ public enum RedisHash {
 	 * @return 被成功移除的域的数量,不包括被忽略的域.
 	 */
 	public void hdel(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			jedis.hdel(key, value);
 		}
 	}
@@ -194,7 +187,7 @@ public enum RedisHash {
 	 * @return 如果哈希表含有给定域,返回 1 . 如果哈希表不含有给定域,或 key 不存在,返回 0
 	 */
 	public void hlen(String key) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			jedis.hlen(key);
 		}
 	}
@@ -211,7 +204,7 @@ public enum RedisHash {
 	 * @return 一个包含哈希表中所有域的表. 当 key 不存在时,返回一个空表.
 	 */
 	public void hkeys(String key) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			jedis.hkeys(key);
 		}
 	}
@@ -228,7 +221,7 @@ public enum RedisHash {
 	 * @return 一个包含哈希表中所有值的表. 当 key 不存在时,返回一个空表.
 	 */
 	public void hvals(String key) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			jedis.hvals(key);
 		}
 	}
@@ -247,7 +240,7 @@ public enum RedisHash {
 	 * @return 以列表形式返回哈希表的域和域的值. 若 key 不存在,返回空列表.
 	 */
 	public void hgetAll(String key) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			jedis.hgetAll(key);
 		}
 	}
@@ -258,7 +251,7 @@ public enum RedisHash {
 	 * @param value
 	 */
 	public void hscan(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			jedis.hscan(key, value);
 		}
 	}

@@ -3,18 +3,11 @@ package wang.gnim.netty.net.redis;
 import java.util.List;
 
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 
 public enum RedisList {
 
 	INSTANCE;
 	
-	private JedisPool pool;
-
-	RedisList() {
-		pool = new JedisPool("10.234.10.12", 7006);
-	}
-
 	/**
 	 * BLPOP 是列表的阻塞式(blocking)弹出原语.
 	 * 
@@ -66,7 +59,7 @@ public enum RedisList {
 	 *         ,第二个元素是被弹出元素的值.
 	 */
 	public List<String> blpop(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.blpop(key, value);
 		}
 	}
@@ -87,7 +80,7 @@ public enum RedisList {
 	 *         反之,返回一个含有两个元素的列表,第一个元素是被弹出元素所属的 key ,第二个元素是被弹出元素的值.
 	 */
 	public List<String> brpop(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.brpop(key, value);
 		}
 	}
@@ -110,7 +103,7 @@ public enum RedisList {
 	 *         反之,返回一个含有两个元素的列表,第一个元素是被弹出元素的值,第二个元素是等待时长.
 	 */
 	public String brpoplpush(String key, String value, int ordinal) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.brpoplpush(key, value, ordinal);
 		}
 	}
@@ -132,7 +125,7 @@ public enum RedisList {
 	 * @return 执行 LPUSH 命令后,列表的长度.
 	 */
 	public Long lpush(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.lpush(key, value);
 		}
 	}
@@ -150,7 +143,7 @@ public enum RedisList {
 	 * @return 列表 key 的长度.
 	 */
 	public Long llen(String key) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.llen(key);
 		}
 	}
@@ -182,7 +175,7 @@ public enum RedisList {
 	 * @return 一个列表,包含指定区间内的元素.
 	 */
 	public List<String> lrange(long ordinal, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.lrange(value, ordinal, ordinal);
 		}
 	}
@@ -224,7 +217,7 @@ public enum RedisList {
 	 * @return 命令执行成功时,返回 ok .
 	 */
 	public String ltrim(String key, String value, long ordinal) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.ltrim(key, ordinal, ordinal);
 		}
 	}
@@ -244,7 +237,7 @@ public enum RedisList {
 	 * @return 列表中下标为 index 的元素. 如果 index 参数的值不在列表的区间范围内(out of range),返回 nil .
 	 */
 	public String lindex(String key, long value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.lindex(key, value);
 		}
 	}
@@ -262,7 +255,7 @@ public enum RedisList {
 	 * @return 操作成功返回 ok ,否则返回错误信息.
 	 */
 	public String lset(String key, long ordinal, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.lset(key, ordinal, value);
 		}
 	}
@@ -283,7 +276,7 @@ public enum RedisList {
 	 *         0 .
 	 */
 	public Long lrem(String key, long ordinal, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.lrem(key, ordinal, value);
 		}
 	}
@@ -297,7 +290,7 @@ public enum RedisList {
 	 * @return 列表的头元素. 当 key 不存在时,返回 nil .
 	 */
 	public String lpop(String key) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.lpop(key);
 		}
 	}
@@ -313,7 +306,7 @@ public enum RedisList {
 	 * @return RPUSHX 命令执行之后,表的长度.
 	 */
 	public Long rpushx(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.rpushx(key, value);
 		}
 	}
@@ -327,7 +320,7 @@ public enum RedisList {
 	 * @return 列表的尾元素. 当 key 不存在时,返回 nil
 	 */
 	public String rpop(String key) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.rpop(key);
 		}
 	}
@@ -349,7 +342,7 @@ public enum RedisList {
 	 * @return 执行 RPUSH 操作后,表的长度.
 	 */
 	public Long rpush(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.rpush(key, value);
 		}
 	}
@@ -372,7 +365,7 @@ public enum RedisList {
 	 * @return
 	 */
 	public String rpoplpush(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.rpoplpush(key, value);
 		}
 	}
@@ -386,7 +379,7 @@ public enum RedisList {
 	 * @return 被弹出的元素.
 	 */
 	public Long lpushx(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.lpushx(key, value);
 		}
 	}
@@ -407,7 +400,7 @@ public enum RedisList {
 	 *         不存在或为空列表,返回 0 .
 	 */
 	public Long linsert(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.linsert(key, null, value, value);
 		}
 	}

@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.Set;
 
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.ScanResult;
 import redis.clients.jedis.Tuple;
 
@@ -12,12 +11,6 @@ public enum RedisSortedSet {
 
 	INSTANCE;
 	
-	private JedisPool pool;
-
-	RedisSortedSet() {
-		pool = new JedisPool("10.234.10.12", 7006);
-	}
-
 	/**
 	 * 
 	 * @param ordinal
@@ -25,7 +18,7 @@ public enum RedisSortedSet {
 	 * @return
 	 */
 	public Set<Tuple> zrangeWithScores(long ordinal, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.zrangeWithScores(value, ordinal, ordinal);
 		}
 	}
@@ -38,7 +31,7 @@ public enum RedisSortedSet {
 	 * @return
 	 */
 	public Set<Tuple> zrevrangeWithScores(String key, String value, long ordinal) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.zrevrangeWithScores(value, ordinal, ordinal);
 		}
 	}
@@ -62,7 +55,7 @@ public enum RedisSortedSet {
 	 * @return 被成功添加的新成员的数量,不包括那些被更新的、已经存在的成员.
 	 */
 	public Long zadd(String key, Map<String, Double> value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.zadd(key, value);
 		}
 	}
@@ -88,7 +81,7 @@ public enum RedisSortedSet {
 	 * @return 指定区间内,带有 score 值(可选)的有序集成员的列表.
 	 */
 	public Long zrange(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.zrank(key, value);
 		}
 	}
@@ -103,7 +96,7 @@ public enum RedisSortedSet {
 	 * @return 被成功移除的成员的数量,不包括被忽略的成员.
 	 */
 	public Long zrem(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.zrem(key, value);
 		}
 	}
@@ -127,7 +120,7 @@ public enum RedisSortedSet {
 	 * @return member 成员的新 score 值,以字符串形式表示.
 	 */
 	public Double zincrby(String key, double ordinal, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.zincrby(key, ordinal, value);
 		}
 	}
@@ -145,7 +138,7 @@ public enum RedisSortedSet {
 	 *         nil .
 	 */
 	public Long zrank(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.zrank(key, value);
 		}
 	}
@@ -163,7 +156,7 @@ public enum RedisSortedSet {
 	 *         nil .
 	 */
 	public Long zrevrank(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.zrevrank(key, value);
 		}
 	}
@@ -181,7 +174,7 @@ public enum RedisSortedSet {
 	 * @return 指定区间内,带有 score 值(可选)的有序集成员的列表.
 	 */
 	public Set<String> zrevrange(String key, String value, long ordinal) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.zrevrange(value, ordinal, ordinal);
 		}
 	}
@@ -194,7 +187,7 @@ public enum RedisSortedSet {
 	 * @return 当 key 存在且是有序集类型时,返回有序集的基数. 当 key 不存在时,返回 0 .
 	 */
 	public Long zcard(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.zcard(key);
 		}
 	}
@@ -209,7 +202,7 @@ public enum RedisSortedSet {
 	 * @return member 成员的 score 值,以字符串形式表示.
 	 */
 	public Double zscore(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.zscore(key, value);
 		}
 	}
@@ -224,7 +217,7 @@ public enum RedisSortedSet {
 	 * @return score 值在 min 和 max 之间的成员的数量.
 	 */
 	public Long zcount(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.zcount(key, value, value);
 		}
 	}
@@ -251,7 +244,7 @@ public enum RedisSortedSet {
 	 * @return 指定区间内,带有 score 值(可选)的有序集成员的列表.
 	 */
 	public Set<String> zrangeByScore(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.zrangeByScore(key, value, value);
 		}
 	}
@@ -282,7 +275,7 @@ public enum RedisSortedSet {
 	 * @return 保存到 destination 的结果集的基数.
 	 */
 	public Long zunionstore(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.zunionstore(key, value);
 		}
 	}
@@ -299,7 +292,7 @@ public enum RedisSortedSet {
 	 * @return 保存到 destination 的结果集的基数.
 	 */
 	public Long zinterstore(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.zinterstore(key, value);
 		}
 	}
@@ -314,7 +307,7 @@ public enum RedisSortedSet {
 	 * @return 整数回复：指定范围内的元素数量.
 	 */
 	public Long zlexcount(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.zlexcount(key, value, value);
 		}
 	}
@@ -343,7 +336,7 @@ public enum RedisSortedSet {
 	 * @return 数组回复：一个列表,列表里面包含了有序集合在指定范围内的成员.
 	 */
 	public Set<String> zrangeByLex(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.zrangeByLex(key, value, value);
 		}
 	}
@@ -355,7 +348,7 @@ public enum RedisSortedSet {
 	 * @return
 	 */
 	public ScanResult<Tuple> zscan(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.zscan(key, value);
 		}
 	}
@@ -367,7 +360,7 @@ public enum RedisSortedSet {
 	 * @return
 	 */
 	public Set<Tuple> zrangeByScoreWithScores(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.zrangeByScoreWithScores(key, value, value);
 		}
 	}
@@ -385,7 +378,7 @@ public enum RedisSortedSet {
 	 * @return 指定区间内,带有 score 值(可选)的有序集成员的列表.
 	 */
 	public Set<String> zrevrangeByScore(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.zrevrangeByScore(key, value, value);
 		}
 	}
@@ -397,7 +390,7 @@ public enum RedisSortedSet {
 	 * @return
 	 */
 	public Set<Tuple> zrevrangeByScoreWithScores(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.zrevrangeByScoreWithScores(key, value, value);
 		}
 	}
@@ -415,7 +408,7 @@ public enum RedisSortedSet {
 	 * @return 被移除成员的数量.
 	 */
 	public Long zremrangeByRank(int ordinal, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.zremrangeByRank(value, ordinal, ordinal);
 		}
 	}
@@ -430,7 +423,7 @@ public enum RedisSortedSet {
 	 * @return 被移除成员的数量.
 	 */
 	public Long zremrangeByScore(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.zremrangeByScore(key, value, value);
 		}
 	}
@@ -445,7 +438,7 @@ public enum RedisSortedSet {
 	 * @return 整数回复：被移除的元素数量.
 	 */
 	public Long zremrangeByLex(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.zremrangeByLex(key, value, value);
 		}
 	}

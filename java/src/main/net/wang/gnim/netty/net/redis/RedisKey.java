@@ -3,19 +3,12 @@ package wang.gnim.netty.net.redis;
 import java.util.Set;
 
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.ScanResult;
 
 public enum RedisKey {
 
 	INSTANCE;
 	
-	private JedisPool pool;
-
-	RedisKey() {
-		pool = new JedisPool("10.234.10.12", 7006);
-	}
-
 	/**
 	 * 删除给定的一个或多个 key .
 	 * 
@@ -30,19 +23,19 @@ public enum RedisKey {
 	 * @return 被删除 key 的数量.
 	 */
 	public Long del(byte[] key) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.del(key);
 		}
 	}
 	
 	public Long del(String key) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.del(key);
 		}
 	}
 	
 	public Long del(String...key) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.del(key);
 		}
 	}
@@ -61,7 +54,7 @@ public enum RedisKey {
 	 * @return
 	 */
 	public byte[] dump(String key) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.dump(key);
 		}
 	}
@@ -73,7 +66,7 @@ public enum RedisKey {
 	 * @return
 	 */
 	public Boolean exists(String key) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.exists(key);
 		}
 	}
@@ -113,7 +106,7 @@ public enum RedisKey {
 	 * @return
 	 */
 	public Long expire(String key, int value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.expire(key, value);
 		}
 	}
@@ -132,7 +125,7 @@ public enum RedisKey {
 	 * @return
 	 */
 	public Set<String> keys(String key) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.keys(key);
 		}
 	}
@@ -170,7 +163,7 @@ public enum RedisKey {
 	 * @return
 	 */
 	public String migrate(String key, String value, int ordinal) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.migrate(key, ordinal, value, ordinal, ordinal);
 		}
 	}
@@ -187,7 +180,7 @@ public enum RedisKey {
 	 * @return 移动成功返回 1 ,失败则返回 0 .
 	 */
 	public Long move(String key, int value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.move(key, value);
 		}
 	}
@@ -202,7 +195,7 @@ public enum RedisKey {
 	 * @return
 	 */
 	public Long persist(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.persist(key);
 		}
 	}
@@ -216,7 +209,7 @@ public enum RedisKey {
 	 * @return
 	 */
 	public Long pexpireAt(String key, long value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.pexpireAt(key, value);
 		}
 	}
@@ -232,7 +225,7 @@ public enum RedisKey {
 	 * @return
 	 */
 	public Long pttl(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.pttl(key);
 		}
 	}
@@ -243,7 +236,7 @@ public enum RedisKey {
 	 * @return
 	 */
 	public String randomKey() {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.randomKey();
 		}
 	}
@@ -262,7 +255,7 @@ public enum RedisKey {
 	 * @return
 	 */
 	public String rename(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.rename(key, value);
 		}
 	}
@@ -277,7 +270,7 @@ public enum RedisKey {
 	 * @return
 	 */
 	public Long renamenx(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.renamenx(key, value);
 		}
 	}
@@ -300,7 +293,7 @@ public enum RedisKey {
 	 * @return
 	 */
 	public String restore(String key, int ordinal, byte[] value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.restore(key, ordinal, value);
 		}
 	}
@@ -320,7 +313,7 @@ public enum RedisKey {
 	 * @return
 	 */
 	public Long sort(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.sort(key, value);
 		}
 	}
@@ -334,7 +327,7 @@ public enum RedisKey {
 	 * @return
 	 */
 	public Long ttl(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.ttl(key);
 		}
 	}
@@ -348,7 +341,7 @@ public enum RedisKey {
 	 *         (哈希表)
 	 */
 	public String type(String key) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.type(key);
 		}
 	}
@@ -379,7 +372,7 @@ public enum RedisKey {
 	 * @return
 	 */
 	public ScanResult<String> scan(String key) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.scan(key);
 		}
 	}
@@ -416,7 +409,7 @@ public enum RedisKey {
 	 * @return
 	 */
 	public Long objectRefcount(String key) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.objectRefcount(key);
 		}
 	}
@@ -428,7 +421,7 @@ public enum RedisKey {
 	 * @return
 	 */
 	public String objectEncoding(String key) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.objectEncoding(key);
 		}
 	}
@@ -440,7 +433,7 @@ public enum RedisKey {
 	 * @return
 	 */
 	public Long objectIdletime(String key) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.objectIdletime(key);
 		}
 	}

@@ -1,17 +1,10 @@
 package wang.gnim.netty.net.redis;
 
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 
 public enum RedisTransaction {
 
 	INSTANCE;
-	
-	private JedisPool pool;
-
-	RedisTransaction() {
-		pool = new JedisPool("10.234.10.12", 7006);
-	}
 
 	/**
 	 * 取消 WATCH 命令对所有 key 的监视.
@@ -24,7 +17,7 @@ public enum RedisTransaction {
 	 * @return
 	 */
 	public String unwatch() {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.unwatch();
 		}
 	}
@@ -37,7 +30,7 @@ public enum RedisTransaction {
 	 * @return 总是返回 OK .
 	 */
 	public String watch(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.watch(key, value);
 		}
 	}

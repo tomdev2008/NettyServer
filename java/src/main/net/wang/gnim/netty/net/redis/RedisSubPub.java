@@ -3,7 +3,6 @@ package wang.gnim.netty.net.redis;
 import java.util.Map;
 
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 
 /**
  * PUNSUBSCRIBE
@@ -17,26 +16,18 @@ public enum RedisSubPub {
 
 	INSTANCE;
 
-	private JedisPool pool;
-
-	RedisSubPub() {
-		pool = new JedisPool("10.234.10.12", 7006);
-	}
-
 	/**
-	 * 
-	 * 
 	 * 订阅一个或多个符合给定模式的频道。
 	 * 
-	 * 每个模式以 * 作为匹配符，比如 it* 匹配所有以 it 开头的频道( it.news 、 it.blog 、 it.tweets 等等)，
-	 * news.* 匹配所有以 news. 开头的频道( news.it 、 news.global.today 等等)，诸如此类。
+	 * 每个模式以 * 作为匹配符,比如 it* 匹配所有以 it 开头的频道( it.news , it.blog , it.tweets 等等),
+	 * news.* 匹配所有以 news. 开头的频道( news.it , news.global.today 等等),诸如此类。
 	 * 
 	 * @param key
 	 * @param value
 	 */
 
 	public void psubscribe(String... channels) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			JedisPubSubImpl imple = new JedisPubSubImpl();
 			jedis.psubscribe(imple, channels);
 		}
@@ -53,7 +44,7 @@ public enum RedisSubPub {
 	 * @return 接收到信息 message 的订阅者数量。
 	 */
 	public Long publish(String channel, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.publish(channel, value);
 		}
 	}
@@ -63,7 +54,7 @@ public enum RedisSubPub {
 	 * @return
 	 */
 	public Long pubsubNumPat() {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.pubsubNumPat();
 		}
 	}
@@ -73,13 +64,13 @@ public enum RedisSubPub {
 	 * @return
 	 */
 	public Map<String, String> pubsubNumSub() {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.pubsubNumSub();
 		}
 	}
 	
 	public void pubsubChannels(String name) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			jedis.pubsubChannels(name);
 		}
 	}
@@ -88,7 +79,7 @@ public enum RedisSubPub {
 	 * 订阅给定的一个或多个频道的信息。
 	 */
 	public void subscribe(String... channels) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			JedisPubSubImpl imple = new JedisPubSubImpl();
 			jedis.subscribe(imple, channels);
 		}

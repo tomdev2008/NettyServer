@@ -3,19 +3,12 @@ package wang.gnim.netty.net.redis;
 import java.util.Set;
 
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.ScanResult;
 
 public enum RedisSet {
 
 	INSTANCE;
 	
-	private JedisPool pool;
-
-	RedisSet() {
-		pool = new JedisPool("10.234.10.12", 7006);
-	}
-
 	/**
 	 * 将一个或多个 member 元素加入到集合 key 当中,已经存在于集合的 member 元素将被忽略.
 	 * 
@@ -28,7 +21,7 @@ public enum RedisSet {
 	 * @return 被添加到集合中的新元素的数量,不包括被忽略的元素.
 	 */
 	public Long sadd(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.sadd(key, value);
 		}
 	}
@@ -41,7 +34,7 @@ public enum RedisSet {
 	 * @return 集合的基数. 当 key 不存在时,返回 0 .
 	 */
 	public Long scard(String key) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.scard(key);
 		}
 	}
@@ -56,7 +49,7 @@ public enum RedisSet {
 	 * @return 一个包含差集成员的列表.
 	 */
 	public Set<String> sdiff(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.sdiff(key, value);
 		}
 	}
@@ -73,7 +66,7 @@ public enum RedisSet {
 	 * @return 结果集中的元素数量.
 	 */
 	public Long sdiffstore(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.sdiffstore(key, value);
 		}
 	}
@@ -90,7 +83,7 @@ public enum RedisSet {
 	 * @return 交集成员的列表.
 	 */
 	public Set<String> sinter(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.sinter(key, value);
 		}
 	}
@@ -107,7 +100,7 @@ public enum RedisSet {
 	 * @return 结果集中的成员数量.
 	 */
 	public Long sinterstore(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.sinterstore(key, value);
 		}
 	}
@@ -120,7 +113,7 @@ public enum RedisSet {
 	 * @return 如果 member 元素是集合的成员,返回 1 . 如果 member 元素不是集合的成员,或 key 不存在,返回 0 .
 	 */
 	public Boolean sismember(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.sismember(key, value);
 		}
 	}
@@ -135,7 +128,7 @@ public enum RedisSet {
 	 * @return 集合中的所有成员.
 	 */
 	public Set<String> smembers(String key) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.smembers(key);
 		}
 	}
@@ -150,7 +143,7 @@ public enum RedisSet {
 	 * @return 被成功移除的元素的数量,不包括被忽略的元素.
 	 */
 	public Long srem(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.srem(key, value);
 		}
 	}
@@ -165,7 +158,7 @@ public enum RedisSet {
 	 * @return 被移除的随机元素. 当 key 不存在或 key 是空集时,返回 nil .
 	 */
 	public String spop(String key) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.spop(key);
 		}
 	}
@@ -188,7 +181,7 @@ public enum RedisSet {
 	 *         destination 集合执行,那么返回 0 .
 	 */
 	public Long smove(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.smove(key, value, value);
 		}
 	}
@@ -209,7 +202,7 @@ public enum RedisSet {
 	 *         参数,那么返回一个数组；如果集合为空,返回空数组.
 	 */
 	public String srandmember(String key) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.srandmember(key);
 		}
 	}
@@ -224,7 +217,7 @@ public enum RedisSet {
 	 * @return 并集成员的列表.
 	 */
 	public Set<String> sunion(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.sunion(key, value);
 		}
 	}
@@ -236,7 +229,7 @@ public enum RedisSet {
 	 * @return
 	 */
 	public ScanResult<String> sscan(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = RedisClient.INSTANCE.getJedis()) {
 			return jedis.sscan(key, value);
 		}
 	}

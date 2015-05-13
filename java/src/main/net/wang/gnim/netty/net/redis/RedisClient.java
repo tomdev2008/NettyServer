@@ -12,12 +12,12 @@ import redis.clients.jedis.JedisPool;
  */
 public enum RedisClient {
 
-	INSTANCE;
+	INSTANCE("10.234.10.12", 7006);
 	
 	private JedisPool pool;
 
-	RedisClient() {
-		pool = new JedisPool("10.234.10.12", 7006);
+	RedisClient(String host, int port) {
+		pool = new JedisPool(host, port);
 	}
 
 	/**
@@ -28,98 +28,102 @@ public enum RedisClient {
 		jedis.close();
 	}
 
+	public Jedis getJedis() {
+		return pool.getResource();
+	}
+	
 	public void bitpos(String key, boolean value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = getJedis()) {
 			jedis.bitpos(key, value);
 		}
 	}
 
 	public void sentinelReset(String name) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = getJedis()) {
 			jedis.sentinelReset(name);
 		}
 	}
 
 	public void sentinelSet(String name) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = getJedis()) {
 			jedis.sentinelSet(name, null);
 		}
 	}
 
 	public void asking() {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = getJedis()) {
 			jedis.asking();
 		}
 	}
 	
 	public void setDataSource() {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = getJedis()) {
 			jedis.setDataSource(pool);
 		}
 	}
 
 	public void expireAt(String key, long value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = getJedis()) {
 			jedis.expireAt(key, value);
 		}
 	}
 
 	public void substr(String name) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = getJedis()) {
 			jedis.substr(name, 0, 0);
 		}
 	}
 
 	public void sunionstore(String key, String value) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = getJedis()) {
 			jedis.sunionstore(key, value);
 		}
 	}
 
 	public void connect() {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = getJedis()) {
 			jedis.connect();
 		}
 	}
 
 	public void isConnected() {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = getJedis()) {
 			jedis.isConnected();
 		}
 	}
 
 	public void resetState() {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = getJedis()) {
 			jedis.resetState();
 		}
 	}
 
 	public void getDB() {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = getJedis()) {
 			jedis.getDB();
 		}
 	}
 
 	public void waitReplicas(int ordinal) {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = getJedis()) {
 			jedis.waitReplicas(ordinal, ordinal);
 		}
 	}
 
 	public void disconnect() {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = getJedis()) {
 			jedis.disconnect();
 		}
 	}
 
 	public void getClient() {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = getJedis()) {
 			jedis.getClient();
 		}
 	}
 
 	public void randomBinaryKey() {
-		try (Jedis jedis = pool.getResource()) {
+		try (Jedis jedis = getJedis()) {
 			jedis.randomBinaryKey();
 		}
 	}
