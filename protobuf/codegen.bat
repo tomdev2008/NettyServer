@@ -31,6 +31,6 @@ java -cp tools\pb-helper\pbhelper.jar ^
     protos generated\cpp generated\js
 
 dir
-call ant clean jar
+call mvn install
 
 pause

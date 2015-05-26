@@ -4,7 +4,6 @@ option optimize_for = LITE_RUNTIME;
 option java_package = "wang.gnim.netty.messages";
 
 enum MsgID {
-   
     MESSAGER   				 			= 1; 			
     TEST   				 				= 2; 
 }
